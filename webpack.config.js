@@ -42,7 +42,9 @@ module.exports = {
     devtool: isDev ? 'source-map' : false,
     devServer: {
         port: 3300,
-        hot: isDev
+        hot: isDev,
+        contentBase: path.resolve(__dirname, 'src'),
+        watchContentBase: true
     },
     plugins: [
         new CleanWebpackPlugin(),
