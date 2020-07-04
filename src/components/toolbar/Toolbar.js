@@ -38,6 +38,7 @@ export class Toolbar extends ExcelComponent {
     }
 
     onClick(event){
+        // console.log(event.target.getAttribute('data-resize'))
         console.log(event.target)
     }
 }
