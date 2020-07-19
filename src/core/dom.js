@@ -1,6 +1,8 @@
 class Dom {
     constructor(selector) {
         // this.$$listeners = {} вариант 1
+        // console.log(typeof selector === 'string')
+        // console.log(selector)
         this.$el = typeof selector === 'string' ? document.querySelector(selector) : selector
     }
 
@@ -10,6 +12,17 @@ class Dom {
             return this
         }
         return this.$el.outerHTML.trim()
+    }
+
+    text(text) {
+        if (typeof text === 'string') {
+            this.$el.textContent = text
+            return this
+        }
+        if (this.$el.tagName.trim().toLowerCase()==='input') {
+            return this.$el.value.trim()
+        }
+        return this.$el.textContent.trim()
     }
 
     clear() {
@@ -52,6 +65,20 @@ class Dom {
         return this.$el.dataset
     }
 
+    find(selector) {
+        return $(this.$el.querySelector(selector))
+    }
+
+    addClass(className) {
+        this.$el.classList.add(className)
+        return this
+    }
+
+    removeClass(className) {
+        this.$el.classList.remove(className)
+        return this
+    }
+
     findAll(selector) {
         return this.$el.querySelectorAll(selector)
     }
@@ -67,6 +94,22 @@ class Dom {
             // console.log(this.$el.style[key], 'ddddddddddddddddddd')
             this.$el.style[key] = styles[key]
         })
+    }
+
+    id(parse) {
+        if (parse){
+            const parsed = this.id().split(':')
+            return {
+                row: +parsed[0],
+                col: +parsed[1]
+            }
+        }
+        return this.data.id
+    }
+
+    focus() {
+        this.$el.focus()
+        return this
     }
 }
 

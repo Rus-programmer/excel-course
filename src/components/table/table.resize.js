@@ -2,14 +2,16 @@ import {$} from "@core/dom";
 
 export function resizeHandler($root, event) {
     const $resizer = $(event.target)
+    // console.log($(event.target));
+    // console.log(event.target);
     // const $parent = $resizer.$el.parentNode // плохой способ привязки к родителю
     // const $parent = $resizer.$el.closest('.column') // лучше но тоже плохой
-    const $parent = $resizer.closest('[data-type="resizable"]')
-    const coords = $parent.getCoords()
-    const sideProp = $resizer.data.resize === 'col' ? 'bottom' : 'right'
+    const $parent = $resizer.closest('[data-type="resizable"]') // находим родителя с [data-type="resizable"] квадратные скобки используются для перебора всевозможных вариантов
+    const coords = $parent.getCoords() //получаем координаты
+    const sideProp = $resizer.data.resize === 'col' ? 'bottom' : 'right' //получаем либо колонку либо строку
     let value
 
-    const cells = $root.findAll(`[data-col="${$parent.data.col}"]`)
+    const cells = $root.findAll(`[data-col="${$parent.data.col}"]`) //находим все ячейки с [data-col="5"] к примеру
     $resizer.css({
         opacity: 1,
         [sideProp]: '-5000px'
@@ -21,7 +23,10 @@ export function resizeHandler($root, event) {
             // const delta = ev.pageX - coords.right
             // $parent.css({width: (coords.width + delta) + 'px'})
             // cells.forEach(el => el.style.width = (coords.width + delta) + 'px')
+            // console.log(ev.pageX); координаты ползунка
+            // console.log(coords.right); координаты ресайзера которого мы хотим растянуть/сузить
             const delta = ev.pageX - coords.right
+            // console.log(delta);
             value = coords.width + delta
             $resizer.css({right: -delta + 'px'})
         } else {
