@@ -1,6 +1,8 @@
 class Dom {
   constructor(selector) {
-    this.$el = typeof selector === 'string' ? document.querySelector(selector) : selector
+    this.$el = typeof selector === 'string'
+      ? document.querySelector(selector)
+      : selector
   }
 
   html(html) {
@@ -9,6 +11,11 @@ class Dom {
       return this
     }
     return this.$el.outerHTML.trim()
+  }
+
+  clear() {
+    this.html('')
+    return this
   }
 
   text(text) {
@@ -20,11 +27,6 @@ class Dom {
       return this.$el.value.trim()
     }
     return this.$el.textContent.trim()
-  }
-
-  clear() {
-    this.html('')
-    return this
   }
 
   on(eventType, callback) {
