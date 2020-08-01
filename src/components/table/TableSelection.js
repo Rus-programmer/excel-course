@@ -1,27 +1,35 @@
 export class TableSelection {
-    static selected = 'selected'
-    constructor() {
-        this.group = []
-        this.current = null
-    }
+  static className = 'selected'
 
-    select($el) {
-        if (!$el.shiftKey) {
-            this.clear()
-        }
-        this.group.push($el)
-        $el.focus().addClass(TableSelection.selected)
-        this.current = $el
-    }
+  constructor() {
+    this.group = []
+    this.current = null
+  }
 
-    clear() {
-        this.group.forEach($el => $el.removeClass(TableSelection.selected))
-        this.group = []
-    }
+  select($el) {
+    this.clear()
+    $el.focus().addClass(TableSelection.className)
+    this.group.push($el)
+    this.current = $el
+  }
 
-    selectGroup($group = []) {
-        this.clear()
-        this.group = $group
-        this.group.forEach($el => $el.addClass(TableSelection.selected))
-    }
+  clear() {
+    this.group.forEach($el => $el.removeClass(TableSelection.className))
+    this.group = []
+  }
+
+  get selectedIds() {
+    return this.group.map($el => $el.id())
+  }
+
+  selectGroup($group = []) {
+    this.clear()
+
+    this.group = $group
+    this.group.forEach($el => $el.addClass(TableSelection.className))
+  }
+
+  applyStyle(style) {
+    this.group.forEach($el => $el.css(style))
+  }
 }
