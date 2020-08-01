@@ -11,8 +11,6 @@
   display: flex;
   justify-content: space-between;
 
-  //temp
-  //background: silver;
   & .input {
     margin: 0;
     padding: 2px 7px;
@@ -25,15 +23,17 @@
     line-height: 22px;
     outline: none;
 
-    &.focus {
+    &:hover {
+      border: 1px solid $border-color;
+    }
+
+    &:focus {
       border: 2px solid #1a73e8;
     }
-    &.hover {
-      border: 1px solid #eee;
-    }
   }
-  .button {
-    @include button(red)
-  }
-}
 
+  .button {
+    @include button(red);
+  }
+
+}

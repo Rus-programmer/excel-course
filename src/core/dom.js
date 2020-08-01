@@ -1,126 +1,132 @@
 class Dom {
-    constructor(selector) {
-        // this.$$listeners = {} вариант 1
-        // console.log(typeof selector === 'string')
-        // console.log(selector)
-        this.$el = typeof selector === 'string' ? document.querySelector(selector) : selector
+  constructor(selector) {
+    this.$el = typeof selector === 'string' ? document.querySelector(selector) : selector
+  }
+
+  html(html) {
+    if (typeof html === 'string') {
+      this.$el.innerHTML = html
+      return this
+    }
+    return this.$el.outerHTML.trim()
+  }
+
+  text(text) {
+    if (typeof text !== 'undefined') {
+      this.$el.textContent = text
+      return this
+    }
+    if (this.$el.tagName.toLowerCase() === 'input') {
+      return this.$el.value.trim()
+    }
+    return this.$el.textContent.trim()
+  }
+
+  clear() {
+    this.html('')
+    return this
+  }
+
+  on(eventType, callback) {
+    this.$el.addEventListener(eventType, callback)
+  }
+
+  off(eventType, callback) {
+    this.$el.removeEventListener(eventType, callback)
+  }
+
+  find(selector) {
+    return $(this.$el.querySelector(selector))
+  }
+
+  append(node) {
+    if (node instanceof Dom) {
+      node = node.$el
     }
 
-    html(html) {
-        if (typeof html === "string") {
-            this.$el.innerHTML = html
-            return this
-        }
-        return this.$el.outerHTML.trim()
+    if (Element.prototype.append) {
+      this.$el.append(node)
+    } else {
+      this.$el.appendChild(node)
     }
 
-    text(text) {
-        if (typeof text === 'string') {
-            this.$el.textContent = text
-            return this
-        }
-        if (this.$el.tagName.trim().toLowerCase()==='input') {
-            return this.$el.value.trim()
-        }
-        return this.$el.textContent.trim()
-    }
+    return this
+  }
 
-    clear() {
-        this.toHTML('')
-        return this
-    }
+  get data() {
+    return this.$el.dataset
+  }
 
-    //node = Element
-    append(node) {
-        if (node instanceof Dom) {
-            node = node.$el
-        }
-        if (Element.prototype.append) {
-            this.$el.append(node)
-        } else {
-            this.$el.appendChild(node)
-        }
-        return this
-    }
+  closest(selector) {
+    return $(this.$el.closest(selector))
+  }
 
-    on(eventType, callback) {
-        // this.$$listeners[eventType]=callback вариант 1
-        this.$el.addEventListener(eventType, callback)
-    }
+  getCoords() {
+    return this.$el.getBoundingClientRect()
+  }
 
-    off(eventType, callback) {
-        // this.$el.removeEventListener(eventType, this.$$listeners[eventType]) вариант 1
-        this.$el.removeEventListener(eventType, callback)
-    }
+  findAll(selector) {
+    return this.$el.querySelectorAll(selector)
+  }
 
-    closest(selector) {
-        return $(this.$el.closest(selector))
-    }
-
-    getCoords() {
-        return this.$el.getBoundingClientRect()
-    }
-
-    get data() {
-        return this.$el.dataset
-    }
-
-    find(selector) {
-        return $(this.$el.querySelector(selector))
-    }
-
-    addClass(className) {
-        this.$el.classList.add(className)
-        return this
-    }
-
-    removeClass(className) {
-        this.$el.classList.remove(className)
-        return this
-    }
-
-    findAll(selector) {
-        return this.$el.querySelectorAll(selector)
-    }
-
-    css(styles = {}) {
-        // for (const key in styles) { // первый вариант при помощи forin. Минус тот что он бегает по прототипам объектов и поэтому нужно делать проверку if
-        //     if (styles.hasOwnProperty(key)) { // hasOwnProperty устаревший метод
-        //         console.log(key, styles[key])
-        //     }
-        // }
-        Object.keys(styles).forEach(key => {
-            // console.log(styles[key], 'ffffffffffffffffffff')
-            // console.log(this.$el.style[key], 'ddddddddddddddddddd')
-            this.$el.style[key] = styles[key]
+  css(styles = {}) {
+    Object
+        .keys(styles)
+        .forEach(key => {
+          this.$el.style[key] = styles[key]
         })
-    }
+  }
 
-    id(parse) {
-        if (parse){
-            const parsed = this.id().split(':')
-            return {
-                row: +parsed[0],
-                col: +parsed[1]
-            }
-        }
-        return this.data.id
-    }
+  getStyles(styles = []) {
+    return styles.reduce((res, s) => {
+      res[s] = this.$el.style[s]
+      return res
+    }, {})
+  }
 
-    focus() {
-        this.$el.focus()
-        return this
+  id(parse) {
+    if (parse) {
+      const parsed = this.id().split(':')
+      return {
+        row: +parsed[0],
+        col: +parsed[1]
+      }
     }
+    return this.data.id
+  }
+
+  focus() {
+    this.$el.focus()
+    return this
+  }
+
+  attr(name, value) {
+    if (value) {
+      this.$el.setAttribute(name, value)
+      return this
+    }
+    return this.$el.getAttribute(name)
+  }
+
+  addClass(className) {
+    this.$el.classList.add(className)
+    return this
+  }
+
+  removeClass(className) {
+    this.$el.classList.remove(className)
+    return this
+  }
 }
 
 export function $(selector) {
-    return new Dom(selector);
+  return new Dom(selector)
 }
 
 $.create = (tagName, classes = '') => {
-    const el = document.createElement(tagName);
-    if (classes) {
-        el.classList.add(classes)
-    }
-    return $(el)
+  const el = document.createElement(tagName)
+  if (classes) {
+    el.classList.add(classes)
+  }
+  return $(el)
 }
